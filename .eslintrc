@@ -1,8 +1,9 @@
 {
-  "extends": ["standard-with-typescript", "../.eslintrc"],
+  "extends": "standard-with-typescript",
   "parserOptions": {
     "project": "./tsconfig.json"
   },
+  "overrides": [],
   "rules": {
     "@typescript-eslint/consistent-type-assertions": "off",
     "@typescript-eslint/no-for-in-array": "off",
