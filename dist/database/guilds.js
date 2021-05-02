@@ -28,50 +28,7 @@ class GuildDB {
                 this.guilds.set(id, fromDB);
                 return fromDB;
             }
-            return {
-                id,
-                prefix: '!',
-                premium_staus: false,
-                log: null,
-                staff_roles: [],
-                logged: {
-                    match_void: true,
-                    party_create: false,
-                    party_disband: {
-                        staff: true,
-                        member: false
-                    },
-                    match_end: {
-                        ranked: true,
-                        unranked: true
-                    }
-                }
-            };
-        });
-    }
-    createGuild(id) {
-        return __awaiter(this, void 0, void 0, function* () {
-            yield guild_1.default.create({ id });
-            return yield this.getGuild(id);
-        });
-    }
-    updateGuild(doc) {
-        return __awaiter(this, void 0, void 0, function* () {
-            this.guilds.set(doc.id, doc);
-            return guild_1.default.findOneAndUpdate({ id: doc.id }, doc).lean();
-        });
-    }
-    getPrefix(id) {
-        return __awaiter(this, void 0, void 0, function* () {
-            const guildData = yield this.getGuild(id);
-            return guildData.prefix;
-        });
-    }
-    setPrefix(id, prefix) {
-        return __awaiter(this, void 0, void 0, function* () {
-            const guildData = yield this.getGuild(id);
-            guildData.prefix = prefix;
-            return yield this.updateGuild(guildData);
+            return null;
         });
     }
 }

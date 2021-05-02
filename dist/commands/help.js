@@ -19,7 +19,7 @@ exports.default = {
     usage: 'help [command]',
     aliases: [],
     exec: (ctx) => __awaiter(void 0, void 0, void 0, function* () {
-        const guildPrefix = '!';
+        const guildPrefix = '-';
         const cmd = ctx.args[0];
         const url = utils_1.getAvatar(ctx.message.author, null, null);
         if (!ctx.worker.commands.commands)

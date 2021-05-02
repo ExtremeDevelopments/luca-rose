@@ -3,21 +3,25 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const mongoose_1 = require("mongoose");
 const guildSchema = new mongoose_1.Schema({
     id: { type: String, required: true, unique: true },
-    prefix: { type: String, default: "!" },
-    premium_status: { type: Boolean, default: false },
-    log: { type: String, default: null },
-    staff_roles: { type: Array },
-    logged: {
-        match_void: { type: Boolean, default: true },
-        party_create: { type: Boolean, default: false },
-        party_disband: {
-            staff: { type: Boolean, default: true },
-            member: { type: Boolean, default: false }
-        },
-        match_end: {
-            ranked: { type: Boolean, default: true },
-            unranked: { type: Boolean, default: true },
-        }
+    prefix: { type: String, default: '-' },
+    options: {
+        embed: { type: Boolean, default: true },
+        no_permissions: { type: Boolean, default: false },
+    },
+    starboard: {
+        minimum: { type: Number, default: 3 },
+        channel: { type: String, default: null }
+    },
+    moderation: {
+        log_channel: { type: String, default: null },
+        mute_role: { type: String, default: null }
+    },
+    toggles: {
+        bans: { type: Boolean, default: true },
+        unbans: { type: Boolean, default: true },
+        mutes: { type: Boolean, default: true },
+        unmutes: { type: Boolean, default: true },
+        kicks: { type: Boolean, default: true },
     }
 });
-exports.default = mongoose_1.model('guilds', guildSchema);
+exports.default = mongoose_1.model('guilds.config', guildSchema);

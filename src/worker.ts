@@ -27,8 +27,8 @@ worker.commands
   .error((ctx, err) => {
     
     ctx.embed
-      .author(err.nonFatal ? err.message : err.toString(), getAvatar(ctx.message.author, null, null))
-      .color(RED)
+      .color(0xF44444)
+      .description(err.nonFatal ? err.message : err.toString())
       .send(true)
       .catch(() => { });
     if (!err.nonFatal) ctx.worker.log(`🔽\n`, err)

@@ -10,5 +10,9 @@ const master = new discord_rose_1.Master(path_1.resolve(__dirname, 'worker.js'),
     token: config_json_1.default.token,
     shards: 'auto',
     shardsPerCluster: 1,
+    cache: {
+        users: true,
+        members: true
+    }
 });
 master.start();

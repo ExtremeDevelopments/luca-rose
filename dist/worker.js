@@ -10,20 +10,25 @@ global.ORANGE = 0xFFA500;
 const fs_1 = require("fs");
 const discord_rose_1 = require("discord-rose");
 const path_1 = require("path");
-const utils_1 = require("./utils");
 const cooldown_middleware_1 = __importDefault(require("@discord-rose/cooldown-middleware"));
 const flags_middleware_1 = __importDefault(require("@discord-rose/flags-middleware"));
 const permissions_middleware_1 = __importDefault(require("@discord-rose/permissions-middleware"));
 const owner_1 = __importDefault(require("./middleware/owner"));
 const disabled_1 = __importDefault(require("./middleware/disabled"));
+const guilds_1 = __importDefault(require("./database/guilds"));
 const worker = new discord_rose_1.Worker();
-worker.setStatus('watching', 'Discord Bots', 'online');
+class LucaWorker extends discord_rose_1.Worker {
+    constructor() {
+        super(...arguments);
+        this.guildDB = new guilds_1.default();
+    }
+}
 worker.commands
-    .prefix(() => { return '!!'; })
+    .prefix(() => { return '-'; })
     .error((ctx, err) => {
     ctx.embed
-        .author(err.nonFatal ? err.message : err.toString(), utils_1.getAvatar(ctx.message.author, null, null))
-        .color(RED)
+        .color(0xF44444)
+        .description(err.nonFatal ? err.message : err.toString())
         .send(true)
         .catch(() => { });
     if (!err.nonFatal)

@@ -7,6 +7,10 @@ const master = new Master(resolve(__dirname, 'worker.js'), {
   token: config.token,
   shards: 'auto',
   shardsPerCluster: 1,
+  cache: {
+    users: true,
+    members: true
+  }
 })
 
 master.start()
