@@ -8,6 +8,7 @@ import { CommandContext } from './CommandContext'
 import { colors } from './colors'
 
 import * as utils from '../../utils'
+import { ModerationLogger } from './ModerationLogger'
 
 interface WorkerOptions {
   database: DBOptions
@@ -23,6 +24,7 @@ export class Worker extends Wkr {
 
   colors = colors
   utils = utils
+  moderationLogger: ModerationLogger
 
   /**
    * Create the bot
@@ -32,6 +34,7 @@ export class Worker extends Wkr {
     super()
 
     this.db = new DB(options.database)
+    this.moderationLogger = new ModerationLogger(this)
 
     this.commands.CommandContext = CommandContext
     this.commands.middleware(flagsMiddleware())
