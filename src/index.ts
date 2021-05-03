@@ -9,7 +9,7 @@ const master = new Master(resolve(__dirname, './bot/index.js'), {
   token: config.DISCORD_TOKEN,
   shards: 'auto',
   shardsPerCluster: 1,
-  intents: 32767,
+  intents: 32511,
   cache: {
     users: true,
     members: true

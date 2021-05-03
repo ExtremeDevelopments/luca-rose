@@ -131,4 +131,24 @@ export class GuildDB {
     guildData.options.embed = value
     await this.updateGuild(guildData)
   }
+
+  /**
+   * Get the guild's log channel
+   * @param id Guild ID
+   */
+  public async getLogChannel (id: Snowflake): Promise<Snowflake | null> {
+    const guildData = await this.getGuild(id)
+    return guildData.moderation.log_channel
+  }
+
+  /**
+   * Set the guild's log channel
+   * @param guildID Guild ID
+   * @param channelID Channel ID
+   */
+  public async setLogChannel (guildID: Snowflake, channelID: Snowflake | null): Promise<void> {
+    const guildData = await this.getGuild(guildID)
+    guildData.moderation.log_channel = channelID
+    await this.updateGuild(guildData)
+  }
 }

@@ -1,5 +1,5 @@
 import { GuildDB } from './guild'
-// import { UserDB } from './user'
+import { ModerationDB } from './moderation'
 
 import mongoose from 'mongoose'
 
@@ -30,6 +30,7 @@ export type DBOptions = string | {
  */
 export class DB {
   guildDB = new GuildDB()
+  moderationDB = new ModerationDB()
 
   constructor (private readonly options: DBOptions) {
     const connectionString = typeof options === 'string'
