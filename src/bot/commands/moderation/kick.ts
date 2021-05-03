@@ -10,8 +10,10 @@ export default {
   userPerms: ['kick'],
   exec: async (ctx) => {
     if (!ctx.guild) return
-    const UserID = (ctx.args[0] || '').replace(/[<@!>]/g, '') as Snowflake
-    const member = ctx.worker.members.get(ctx.guild.id ?? ctx.message.author.id)?.get(UserID)
+    const userID = (ctx.args[0] || '').replace(/[<@!>]/g, '') as Snowflake
+    const member = ctx.worker.members.get(ctx.guild.id ?? ctx.message.author.id)?.get(userID) ??
+      await ctx.worker.api.members.get(ctx.id, userID)
+
     if (!member) {
       await ctx.error('I couldn\'t find a member to kick')
       return

@@ -3,9 +3,10 @@ import { CommandContext } from 'discord-rose/dist/typings/lib'
 export default () => {
   return async (ctx: CommandContext) => {
     if (!ctx.command.owner) return true
-    if (!['300438546236571658'].includes(ctx.message.author.id)) {
+    const isOwner = await ctx.worker.db.userDB.getOwner(ctx.message.author.id)
+    if (!isOwner) {
       await ctx.error('You can\'t do this!')
-      return
+      return false
     }
     return true
   }

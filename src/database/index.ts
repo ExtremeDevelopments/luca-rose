@@ -1,7 +1,8 @@
+import mongoose from 'mongoose'
+
+import { UserDB } from './user'
 import { GuildDB } from './guild'
 import { ModerationDB } from './moderation'
-
-import mongoose from 'mongoose'
 
 /**
  * Database options
@@ -29,6 +30,7 @@ export type DBOptions = string | {
  * db.userDB.getOwner('277183033344524288') // true
  */
 export class DB {
+  userDB = new UserDB()
   guildDB = new GuildDB()
   moderationDB = new ModerationDB()
 

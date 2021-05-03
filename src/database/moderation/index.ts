@@ -2,6 +2,11 @@ import { Cache } from '@jpbberry/cache'
 import { Snowflake } from 'discord-rose'
 import { Schema, model } from 'mongoose'
 
+// interface LogMessage {
+//   channel_id: null | Snowflake
+//   message_id: null | Snowflake
+// }
+
 interface ModerationDoc {
   guild_id: Snowflake
   user_id: Snowflake
@@ -10,8 +15,8 @@ interface ModerationDoc {
   mod_id: Snowflake | null
   reason: string | null
   log_message: {
-    channel_id: Snowflake
-    message_id: Snowflake
+    channel_id: null | Snowflake
+    message_id: null | Snowflake
   }
 }
 
@@ -71,5 +76,10 @@ export class ModerationDB {
 
   public async createModeration (doc: ModerationDoc): Promise<void> {
     await moderationModel.create(doc)
+  }
+
+  public async getAllCases (id: Snowflake): Promise<ModerationDoc[]> {
+    const fromDB = await moderationModel.find({ guild_id: id }).lean()
+    return fromDB
   }
 }

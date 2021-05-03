@@ -19,12 +19,12 @@ export default async function (worker: Worker, data: GatewayGuildBanAddDispatchD
     .find(
       e => e.user_id === user.id &&
         e.guild_id === guild.id &&
-        e.type === 'BAN'
+        e.type === 'KICK'
     )
 
   if (doc) return
 
   // implement audit logs here
 
-  await worker.moderationLogger.kick(guild.id, null, user.id, undefined)
+  await worker.moderationLogger.ban(guild.id, null, user.id, undefined)
 }
