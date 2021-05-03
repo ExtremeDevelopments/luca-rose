@@ -17,6 +17,7 @@ interface GuildDoc {
   moderation: {
     log_channel: Snowflake | null
     mute_role: Snowflake | null
+    server_log_channel: Snowflake | null
   }
   toggles: {
     bans: boolean
@@ -41,7 +42,8 @@ const guildSchema = new Schema({
   },
   moderation: {
     log_channel: { type: String, default: null },
-    mute_role: { type: String, default: null }
+    mute_role: { type: String, default: null },
+    server_log_channel: { type: String, default: null }
   },
   toggles: {
     bans: { type: Boolean, default: true },
@@ -149,6 +151,17 @@ export class GuildDB {
   public async setLogChannel (guildID: Snowflake, channelID: Snowflake | null): Promise<void> {
     const guildData = await this.getGuild(guildID)
     guildData.moderation.log_channel = channelID
+    await this.updateGuild(guildData)
+  }
+
+  /**
+   * Set the guild's server log channel
+   * @param guildID Guild ID
+   * @param channelID Channel ID
+   */
+  public async setServerLogChannel (guildID: Snowflake, channelID: Snowflake | null): Promise<void> {
+    const guildData = await this.getGuild(guildID)
+    guildData.moderation.server_log_channel = channelID
     await this.updateGuild(guildData)
   }
 }

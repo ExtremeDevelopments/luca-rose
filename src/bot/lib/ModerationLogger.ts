@@ -1,5 +1,6 @@
-import { Snowflake } from 'discord-api-types'
+import { Snowflake, APIMessage, GatewayMessageDeleteDispatchData, GatewayGuildMemberAddDispatchData } from 'discord-api-types'
 import { Embed } from 'discord-rose'
+import { getAvatar, getIcon, getSnowflakeTimestamp } from '../../utils'
 import { Worker } from './Worker'
 
 interface LogMessage {
@@ -144,6 +145,68 @@ export class ModerationLogger {
 
     await this.worker.db.moderationDB.updateModeration(modData)
     await this.sendLog(guildID, caseNum)
+  }
+
+  public async addMember (data: GatewayGuildMemberAddDispatchData): Promise<void> {
+    if (!data.guild_id) return
+    if (!data.user) return
+    const guild = await this.worker.db.guildDB.getGuild(data.guild_id)
+    if (!guild) return
+
+    const user = this.worker.users.get(data.user.id) ?? await this.worker.api.users.get(data.user.id)
+    if (!user) return
+    if (!guild.moderation.server_log_channel) return
+
+    const channel = this.worker.channels.get(guild.moderation.server_log_channel) ??
+      await this.worker.api.channels.get(guild.moderation.server_log_channel).catch(e => null)
+
+    if (!channel) return
+    const embed = new Embed()
+      .author('Member Joined', getAvatar(user))
+      .description(`<@${user.id}> ${user.username}#${user.discriminator}`)
+      .thumbnail(getAvatar(user))
+      .field('Account Age', getSnowflakeTimestamp(user.id).toUTCString())
+      .footer(`ID: ${user.id}`)
+      .timestamp()
+
+    await this.worker.api.messages.send(channel.id, embed)
+  }
+
+  public async deleteMessage (data: APIMessage | GatewayMessageDeleteDispatchData, userID?: Snowflake): Promise<void> {
+    if (!data.guild_id) return
+
+    const guild = this.worker.guilds.get(data.guild_id)
+    if (!guild) return
+
+    const guildData = await this.worker.db.guildDB.getGuild(data.guild_id)
+    if (!guildData) return
+
+    const user = userID
+      ? this.worker.users.get(userID) ??
+    await this.worker.api.users.get(userID).catch(e => null)
+      : undefined
+
+    if (!guildData.moderation.server_log_channel) return
+
+    const channel = this.worker.channels.get(guildData.moderation.server_log_channel) ??
+      await this.worker.api.channels.get(guildData.moderation.server_log_channel).catch(e => null)
+
+    if (!channel) return
+
+    const embed = new Embed()
+      .author(user ? `${user.username}#${user.discriminator}` : guild.name, user ? getAvatar(user) : getIcon(guild))
+      .description(user
+        ? `**Message sent by <@${user.id}> deleted in <#${data.channel_id}>**\n${
+          // @ts-expect-error
+          // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
+          data.content ?? 'Content not available'
+        }`
+        : `Message deleted in <#${data.channel_id}>\n`)
+      .footer(`Author: ${user ? user.id : '?'} | Message ID: ${data.id}`)
+      .timestamp()
+      .color(this.worker.colors.SOFT_RED)
+
+    await this.worker.api.messages.send(channel.id, embed)
   }
 
   private async action (type: 'BAN' | 'UNBAN' | 'KICK' | 'MUTE' | 'UNMUTE', guildID: Snowflake, modID: Snowflake | null, userID: Snowflake, reason?: string): Promise<void> {

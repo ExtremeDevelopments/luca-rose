@@ -9,7 +9,7 @@ export default {
   usage: 'help [command]',
   aliases: [],
   exec: async (ctx) => {
-    const guildPrefix = '-'
+    const guildPrefix = await ctx.worker.db.guildDB.getPrefix(ctx.id)
 
     const cmd = ctx.args[0]
     const url = getAvatar(ctx.message.author, null, null)

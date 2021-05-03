@@ -11,7 +11,7 @@ export default {
     const reason = ctx.args.slice(1).join(' ')
     const userID = ctx.message.mentions[0]?.id ?? (ctx.args[0] || '').replace(/[<@!>]/g, '') as Snowflake
     const member = ctx.worker.members.get(ctx.guild.id ?? ctx.message.author.id)?.get(userID) ??
-      await ctx.worker.api.members.get(ctx.id, userID)
+      await ctx.worker.api.members.get(ctx.id, userID).catch(e => null)
 
     if (!member) {
       await ctx.error('I couldn\'t find a member to ban')
