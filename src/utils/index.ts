@@ -1,5 +1,5 @@
-import { APIUser } from 'discord-api-types'
-import { Cluster } from 'discord-rose'
+import { APIUser, APIGuild } from 'discord-api-types'
+import { CachedGuild, Cluster } from 'discord-rose'
 
 import colors from 'colors/safe'
 
@@ -13,6 +13,10 @@ import colors from 'colors/safe'
 export function getAvatar (user: APIUser, type?: string | null, size?: number | null): string {
   if (user.avatar) return `https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}${type ? `.${type}` : ''}${size ? `?size=${size}` : ''}`
   return `https://cdn.discordapp.com/embed/avatars/${BigInt(user.discriminator) % BigInt(5)}.png`
+}
+
+export function getIcon (guild: APIGuild | CachedGuild, type?: string | null, size?: number | null): string {
+  return `https://cdn.discordapp.com/icons/${guild.id}/${guild.icon ?? 'icon'}${type ? `.${type}` : ''}${size ? `?size=${size}` : ''}`
 }
 
 export function createID (length: number = 16): string {
@@ -82,4 +86,10 @@ export const permissions = {
   viewChannel: 'View Channel',
   viewInsights: 'View Insights',
   webhooks: 'Create Webhook'
+}
+
+const EPOCH = 1420070400000n
+
+export function getSnowflakeTimestamp (snowflake: Snowflake): Date {
+  return new Date(Number(BigInt(snowflake) / 4194304n + EPOCH))
 }

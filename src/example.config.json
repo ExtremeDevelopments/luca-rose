@@ -1,4 +1,12 @@
 {
   "DISCORD_TOKEN": "TOKEN",
-  "MONGO": "LINK OR OBJECT"
+  "MONGO": "LINK OR OBJECT",
+  "TOPGG": {
+    "TOKEN": "TOKEN",
+    "WEBHOOK": {
+      "PORT": 6969,
+      "AUTH": "AUTH"
+    },
+    "OPTIONS": {}
+  }
 }

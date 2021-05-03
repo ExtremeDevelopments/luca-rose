@@ -1,31 +1,53 @@
 import { CommandOptions, Snowflake } from 'discord-rose'
-import fetch from 'node-fetch';
+import { APIUser } from 'discord-api-types'
+
+import { getAvatar } from '../../../utils'
+
 export default {
-    command: 'botinfo',
-    aliases: ['bi'],
-    category: 'bots',
-    description: 'Get information of a bot on top.gg',
-    exec: async (ctx) => {
-        const userID = ctx.message.mentions[0]?.id ?? (ctx.args[0] || '').replace(/[<@!>]/g, '') as Snowflake;
-        if(!userID) return ctx.error(`You must provide a bot mention or ID`)
-        const data = await fetch(`https://top.gg/api/bots/${userID}`, {
-            method: 'GET',
-            headers: {
-                "Authorization":"topgg-token"
-            }
-        })
-        ctx.embed
-        .author(data.username, `discord.com/users/${data.id}/avatars/${data.avatar}`) // Pretty sure this is incorrect avatar link
-        .field('ID', data.id, true)
-        .field('Username', data.username)
-        .field('Discriminator', data.discriminator)
-        .field('Short Description', data.shortdesc)
-        .field('Library', data.lib)
-        .field('Prefix', data.prefix)
-        .field('Total Upvotes', data.points)
-        .field('Monthly Upvotes', data.monthlyPonumbers)
-        .field('Server Count', data.guilds)
-        .field('Owner(s)', 'Add later')
-        
-    }
+  command: 'botinfo',
+  aliases: ['bi'],
+  category: 'bots',
+  description: 'Shows bot info, title redirects to site listing.',
+  exec: async ctx => {
+    if (!ctx.worker.topgg) return await ctx.error('This command is not currently enabled')
+
+    const botID =
+      ctx.message.mentions[0]?.id ??
+      ((ctx.args[0] || '').replace(/[<@!>]/g, '') as Snowflake)
+
+    if (!botID) return await ctx.error('Please include a bot mention or ID')
+
+    const data = await ctx.worker.topgg.getBot(botID)
+    await ctx.embed
+      .author(data.username, getAvatar(data as APIUser), `https://top.gg/users/${data.id}`)
+      .thumbnail(getAvatar(data as APIUser))
+      .field('ID', data.id, true)
+      .field('Username', data.username, true)
+      .field('Discriminator', String(data.discriminator), true)
+      .field('Short Description', data.shortdesc, true)
+      .field('Library', data.lib || 'null', true)
+      .field('Prefix', data.prefix, true)
+      .field('Total Upvotes', data.points.toString(), true)
+      .field('Monthly Upvotes', data.monthlyPoints.toString(), true)
+      .field(
+        'Server Count',
+        // @ts-expect-error
+        // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
+        `${data.server_count} Server${data.server_count > 1 ? 's' : ''} | ${data.shard_count ?? 1} Shard${data.shard_count > 1 ? 's' : ''}`,
+        true
+      )
+      .field(
+        'Owner(s)',
+        (await Promise.all(data.owners.map(id => ctx.worker.topgg?.getUser(id))))
+          .map(user =>
+            user
+              ? `<@${user.id}>${user?.certifiedDev ? ' <:certified:838857121134018600>' : ''}`
+              : ''
+          )
+          .filter(e => !!e)
+          .join('\n'),
+        true
+      )
+      .send()
+  }
 } as CommandOptions

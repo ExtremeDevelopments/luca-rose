@@ -1,7 +1,7 @@
 import { CommandOptions } from 'discord-rose'
 
 export default {
-  command: 'prefix',
+  command: 'setprefix',
   permissions: ['manageMessages'],
   category: 'Moderation',
   description: 'Set my prefix.',
