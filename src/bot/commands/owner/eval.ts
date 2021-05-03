@@ -16,6 +16,7 @@ export default {
   category: 'owner',
   command: 'eval',
   aliases: ['ev'],
+  flags: ['b', 'm', 's', 'l'],
   owner: true,
   exec: async (ctx) => {
     const worker = ctx.worker
