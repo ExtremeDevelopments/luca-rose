@@ -26,5 +26,5 @@ export default async function (worker: Worker, data: GatewayGuildBanAddDispatchD
 
   // implement audit logs here
 
-  await worker.moderationLogger.ban(guild.id, null, user.id, undefined)
+  await worker.moderationLogger.kick(guild.id, null, user.id, undefined)
 }
