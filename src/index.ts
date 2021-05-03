@@ -14,11 +14,11 @@ const master = new Master(resolve(__dirname, './bot/index.js'), {
     users: true,
     members: true
   },
-  log: (msg, cluster) => {
+  log: (msg: string, cluster: any) => {
     log(cluster, master.processes.reduce((a, c) => c.id.length > a ? c.id.length : a, 1), msg)
   }
 })
 
 master.start()
-  .then(() => {})
+  .then(() => { })
   .catch((err) => { throw err })
