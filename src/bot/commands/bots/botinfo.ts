@@ -18,6 +18,10 @@ export default {
     if (!botID) return await ctx.error('Please include a bot mention or ID')
 
     const data = await ctx.worker.topgg.getBot(botID)
+      .catch(() => null)
+
+    if (!data) return await ctx.error('That bot wasn\'t found')
+
     await ctx.embed
       .author(data.username, getAvatar(data as APIUser), `https://top.gg/users/${data.id}`)
       .thumbnail(getAvatar(data as APIUser))

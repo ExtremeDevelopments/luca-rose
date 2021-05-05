@@ -14,6 +14,7 @@ export default {
       ctx.message.author.id)
 
     const data = await ctx.worker.dblstats.getUsersBots(userID)
+      .catch(() => null)
 
     if (!data?.bots) return await ctx.error('User not found')
 
