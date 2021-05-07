@@ -53,6 +53,7 @@ export default {
         // eslint-disable-next-line @typescript-eslint/restrict-plus-operands
         embed.field(cat.charAt(0).toUpperCase() + cat.substr(1), desc)
       })
+
       await embed
         .send(true)
     }

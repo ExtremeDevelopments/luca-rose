@@ -19,6 +19,8 @@ const master = new Master(resolve(__dirname, './bot/index.js'), {
   }
 })
 
+master.spawnProcess('API', resolve(__dirname, './api/index.js'))
+
 master.start()
   .then(() => { })
   .catch((err) => { throw err })
