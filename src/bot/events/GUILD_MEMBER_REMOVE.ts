@@ -1,7 +1,9 @@
 import { Worker } from '../lib/Worker'
-import { GatewayGuildBanAddDispatchData } from 'discord-api-types'
+import { GatewayGuildMemberRemoveDispatchData } from 'discord-api-types'
 
-export default async function (worker: Worker, data: GatewayGuildBanAddDispatchData): Promise<void> {
+export default async function (worker: Worker, data: GatewayGuildMemberRemoveDispatchData): Promise<void> {
+  await worker.moderationLogger.removeMember(data)
+
   // const guild = worker.guilds.get(data.guild_id)
   // const user = data.user
   // if (!guild || !user) return
