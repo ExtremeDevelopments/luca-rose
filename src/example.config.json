@@ -8,5 +8,8 @@
       "AUTH": "AUTH"
     },
     "OPTIONS": {}
+  },
+  "DBLSTATS": {
+    "TOKEN": "TOKEN"
   }
 }

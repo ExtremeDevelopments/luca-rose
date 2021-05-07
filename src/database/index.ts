@@ -3,6 +3,7 @@ import mongoose from 'mongoose'
 import { UserDB } from './user'
 import { GuildDB } from './guild'
 import { ModerationDB } from './moderation'
+import VoteDB from './vote'
 
 /**
  * Database options
@@ -33,6 +34,7 @@ export class DB {
   userDB = new UserDB()
   guildDB = new GuildDB()
   moderationDB = new ModerationDB()
+  voteDB = new VoteDB()
 
   constructor (private readonly options: DBOptions) {
     const connectionString = typeof options === 'string'
